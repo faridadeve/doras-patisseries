@@ -10,21 +10,24 @@ const products: Product[] = [
     name: "Éclair au Chocolat",
     description: "Pâte à choux croustillante, garnie d'une crème pâtissière au chocolat noir.",
     image: "https://images.unsplash.com/photo-1612203985729-70726954388c",
-    price: 4.50
+    price: 4.50,
+    availableImmediately: true
   },
   {
     id: 2,
     name: "Macaron Framboise",
     description: "Coques délicates aux amandes, garnies d'une crème à la framboise fraîche.",
     image: "https://images.unsplash.com/photo-1569864358642-9d1684040f43",
-    price: 2.80
+    price: 2.80,
+    availableImmediately: true
   },
   {
     id: 3,
     name: "Tarte aux Fruits",
-    description: "Pâte sucrée, crème pâtissière et fruits frais de saison.",
+    description: "Pâte sucrée, crème pâtissière et fruits frais de saison. Sur commande uniquement.",
     image: "https://images.unsplash.com/photo-1488477181946-6428a0291777",
-    price: 28.00
+    price: 28.00,
+    availableImmediately: false
   },
 ];
 
@@ -33,8 +36,10 @@ const Index = () => {
 
   const handleReserve = (product: Product) => {
     toast({
-      title: "Produit réservé",
-      description: `${product.name} ajouté au panier`,
+      title: product.availableImmediately ? "Produit ajouté au panier" : "Produit réservé",
+      description: product.availableImmediately 
+        ? `${product.name} ajouté au panier`
+        : `${product.name} sera disponible dans 24h`,
     });
   };
 
@@ -88,12 +93,35 @@ const Index = () => {
                       </span>
                     </div>
                     <p className="text-gray-600 mb-4">{product.description}</p>
-                    <Button 
-                      className="w-full bg-gold hover:bg-gold/90"
-                      onClick={() => handleReserve(product)}
-                    >
-                      Réserver
-                    </Button>
+                    {product.availableImmediately ? (
+                      <div className="space-y-2">
+                        <Button 
+                          className="w-full bg-gold hover:bg-gold/90"
+                          onClick={() => handleReserve(product)}
+                        >
+                          Ajouter au panier
+                        </Button>
+                        <Button 
+                          variant="outline"
+                          className="w-full border-gold text-gold hover:bg-gold/10"
+                          onClick={() => handleReserve(product)}
+                        >
+                          Réserver
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <p className="text-sm text-red-500 mb-2">
+                          Disponible uniquement sur commande (24h)
+                        </p>
+                        <Button 
+                          className="w-full bg-gold hover:bg-gold/90"
+                          onClick={() => handleReserve(product)}
+                        >
+                          Réserver
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </Card>
               </motion.div>

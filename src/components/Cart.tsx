@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Plus, Minus } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Clock } from "lucide-react";
 import { useState } from "react";
 import { CartItem } from "@/types/product";
 import { useToast } from "@/components/ui/use-toast";
@@ -14,8 +14,15 @@ const Cart = ({ items, onUpdateQuantity }: CartProps) => {
   const { toast } = useToast();
 
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const hasReservationItems = items.some(item => !item.availableImmediately);
 
   const handleCheckout = () => {
+    if (hasReservationItems) {
+      toast({
+        title: "Information importante",
+        description: "Certains produits nécessitent 24h de préparation. Notre équipe vous contactera pour confirmer la commande.",
+      });
+    }
     toast({
       title: "Commande validée",
       description: `Total: ${total.toFixed(2)}€`,
@@ -46,10 +53,18 @@ const Cart = ({ items, onUpdateQuantity }: CartProps) => {
           ) : (
             <>
               {items.map((item) => (
-                <div key={item.id} className="flex items-center justify-between py-2">
-                  <div>
-                    <p className="font-medium">{item.name}</p>
+                <div key={item.id} className="flex items-center justify-between py-2 border-b">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{item.name}</p>
+                      {!item.availableImmediately && (
+                        <Clock className="h-4 w-4 text-gold" />
+                      )}
+                    </div>
                     <p className="text-sm text-gray-500">{item.price.toFixed(2)}€</p>
+                    {!item.availableImmediately && (
+                      <p className="text-xs text-gold">Sur commande (24h)</p>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
                     <Button
@@ -70,13 +85,18 @@ const Cart = ({ items, onUpdateQuantity }: CartProps) => {
                   </div>
                 </div>
               ))}
-              <div className="border-t mt-4 pt-4">
-                <div className="flex justify-between font-medium">
+              <div className="mt-4">
+                <div className="flex justify-between font-medium mb-2">
                   <span>Total:</span>
                   <span>{total.toFixed(2)}€</span>
                 </div>
+                {hasReservationItems && (
+                  <p className="text-xs text-gold mb-4">
+                    ⚠️ Certains produits nécessitent 24h de préparation
+                  </p>
+                )}
                 <Button
-                  className="w-full mt-4 bg-gold hover:bg-gold/90"
+                  className="w-full bg-gold hover:bg-gold/90"
                   onClick={handleCheckout}
                 >
                   Valider la commande
