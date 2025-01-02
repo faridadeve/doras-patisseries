@@ -1,28 +1,43 @@
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { Product } from "@/types/product";
+import { useToast } from "@/components/ui/use-toast";
 
-const products = [
+const products: Product[] = [
   {
     id: 1,
     name: "Éclair au Chocolat",
     description: "Pâte à choux croustillante, garnie d'une crème pâtissière au chocolat noir.",
     image: "https://images.unsplash.com/photo-1612203985729-70726954388c",
+    price: 4.50
   },
   {
     id: 2,
     name: "Macaron Framboise",
     description: "Coques délicates aux amandes, garnies d'une crème à la framboise fraîche.",
     image: "https://images.unsplash.com/photo-1569864358642-9d1684040f43",
+    price: 2.80
   },
   {
     id: 3,
     name: "Tarte aux Fruits",
     description: "Pâte sucrée, crème pâtissière et fruits frais de saison.",
     image: "https://images.unsplash.com/photo-1488477181946-6428a0291777",
+    price: 28.00
   },
 ];
 
 const Index = () => {
+  const { toast } = useToast();
+
+  const handleReserve = (product: Product) => {
+    toast({
+      title: "Produit réservé",
+      description: `${product.name} ajouté au panier`,
+    });
+  };
+
   return (
     <div>
       <section className="relative h-[80vh] bg-gradient-to-r from-purple to-pink flex items-center">
@@ -66,8 +81,19 @@ const Index = () => {
                     className="w-full h-48 object-cover"
                   />
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
-                    <p className="text-gray-600">{product.description}</p>
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="text-xl font-semibold">{product.name}</h3>
+                      <span className="text-lg font-bold text-gold">
+                        {product.price.toFixed(2)}€
+                      </span>
+                    </div>
+                    <p className="text-gray-600 mb-4">{product.description}</p>
+                    <Button 
+                      className="w-full bg-gold hover:bg-gold/90"
+                      onClick={() => handleReserve(product)}
+                    >
+                      Réserver
+                    </Button>
                   </div>
                 </Card>
               </motion.div>
