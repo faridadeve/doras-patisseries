@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, Plus, Minus, Clock } from "lucide-react";
 import { useState } from "react";
 import { CartItem } from "@/types/product";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 type CartProps = {
   items: CartItem[];
